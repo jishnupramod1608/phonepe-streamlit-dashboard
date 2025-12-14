@@ -582,6 +582,16 @@ else:
     st.write("No data to analyse outliers.")
 
 st.markdown("---")
+st.subheader("🧠 Key Insights (Business Summary)")
+
+st.success(
+"""
+• Groceries spending is relatively stable across the selected period, indicating predictable household expenses.  
+• Person-to-person transactions show higher variability, suggesting occasional high-value transfers.  
+• The top 1% of transactions contribute a disproportionately high share of total value, highlighting spending concentration.  
+• Median transaction values are close to the mean, which indicates limited extreme outliers overall.
+"""
+)
 
 # ------------------------------
 # Hypothesis tests
@@ -624,26 +634,37 @@ st.markdown("---")
 # ------------------------------
 # Suggested key insights for report
 # ------------------------------
-st.subheader("Key insights")
+st.subheader("🧠 Key Insights (Business Summary)")
 
-insights = [
-    f"Total transactions analysed: **{stats_dict['total_tx']:,}**, "
-    f"total value **₹{stats_dict['total_val']:.2f}**.",
-    f"Typical transaction size: median **₹{stats_dict['median']:.2f}**, "
-    f"mean **₹{stats_dict['mean']:.2f}**.",
-    f"Top 1% of transactions account for roughly **{stats_dict['top1_share']:.2%}** "
-    "of total value, showing a heavy-tailed spending pattern.",
-    "Treemap & pie charts indicate which categories dominate overall spending "
-    "(e.g., Groceries / Bills / Person transfers).",
-    "Monthly stacked chart shows how category-wise spending evolves over time, "
-    "with visible peaks and dips.",
-    "Weekday–month heatmap reveals which days of week have higher spending intensity.",
-    "Violin + stats table compare distributions across categories, highlighting which "
-    "categories have higher typical and high-end (P90) transaction values.",
-]
+insights = []
 
-for line in insights:
-    st.markdown(f"- {line}")
+if len(fdf) > 0:
+    insights.append(
+        f"Median transaction value is ₹{fdf['amount'].median():,.0f}, "
+        f"while the mean is ₹{fdf['amount'].mean():,.0f}, indicating "
+        f"{'presence of high-value transactions' if fdf['amount'].mean() > fdf['amount'].median() else 'balanced spending behaviour'}."
+    )
+
+    if 'category' in fdf.columns and fdf['category'].nunique() > 1:
+        top_cat = (
+            fdf.groupby('category')['amount']
+            .sum()
+            .idxmax()
+        )
+        insights.append(
+            f"'{top_cat}' contributes the highest share of total transaction value in the selected filters."
+        )
+
+    insights.append(
+        f"The top 1% of transactions account for {share:.1%} of the total value, "
+        f"showing {'high' if share > 0.25 else 'moderate'} spending concentration."
+    )
+
+    for i in insights:
+        st.write("• " + i)
+else:
+    st.info("No insights available for the selected filters.")
 # ---------------------------
 # End
+
 # ---------------------------
