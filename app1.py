@@ -388,6 +388,10 @@ with left:
         )
         fig_month.update_layout(hovermode="x unified", legend_title_text="Category")
         st.plotly_chart(fig_month, use_container_width=True)
+        st.caption(
+    "This chart shows how total transaction value changes over time, "
+    "split by spending categories."
+)
     else:
         st.info("Not enough data to show monthly trend.")
 
@@ -658,4 +662,5 @@ else:
 # End
 
 # ---------------------------
+
 
