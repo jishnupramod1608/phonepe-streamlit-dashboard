@@ -582,16 +582,6 @@ else:
     st.write("No data to analyse outliers.")
 
 st.markdown("---")
-st.subheader("🧠 Key Insights (Business Summary)")
-
-st.success(
-"""
-• Groceries spending is relatively stable across the selected period, indicating predictable household expenses.  
-• Person-to-person transactions show higher variability, suggesting occasional high-value transfers.  
-• The top 1% of transactions contribute a disproportionately high share of total value, highlighting spending concentration.  
-• Median transaction values are close to the mean, which indicates limited extreme outliers overall.
-"""
-)
 
 # ------------------------------
 # Hypothesis tests
@@ -668,3 +658,4 @@ else:
 # End
 
 # ---------------------------
+
