@@ -303,18 +303,13 @@ st.markdown(
 <div class="header-banner">
   <div style="display:flex; justify-content:space-between; align-items:center;">
     <div>
-      <h1 style="margin:0;">📊 PhonePe Transaction Insights</h1>
+      <h1 style="margin:0;">PhonePe Transaction Insights</h1>
       <div style="margin-top:4px; font-size:15px; color:rgba(255,255,255,0.95);">
         Interactive dashboard – colourful charts, trends and key statistics.
       </div>
       <div style="margin-top:4px; font-size:13px; color:rgba(255,255,255,0.9);">
         Use the filters on the left; hover on charts for details.
       </div>
-    </div>
-    <div style="text-align:right; font-size:13px; color:rgba(255,255,255,0.95);">
-      <div><b>Project:</b> Data Analysis</div>
-      <div><b>Owner:</b> Jishnu</div>
-      <div><b>Date:</b> {today_str}</div>
     </div>
   </div>
 </div>
@@ -662,5 +657,6 @@ else:
 # End
 
 # ---------------------------
+
 
 
