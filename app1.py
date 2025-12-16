@@ -260,7 +260,11 @@ if raw_df is None:
     st.stop()
 
 df = preprocess(raw_df)
+st.markdown("---")
 
+if st.button("Go to Analytics Dashboard"):
+    st.switch_page("pages/upload_data.py")
+    
 with st.sidebar.expander("Filters", expanded=True):
     min_date = df["date"].min().date()
     max_date = df["date"].max().date()
@@ -657,6 +661,7 @@ else:
 # End
 
 # ---------------------------
+
 
 
 
