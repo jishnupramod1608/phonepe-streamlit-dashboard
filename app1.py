@@ -253,10 +253,6 @@ st.sidebar.header("Controls")
 uploaded_file = st.sidebar.file_uploader(
     "Upload your transactions (.xlsx or .csv)", type=["xlsx", "csv"]
 )
-st.sidebar.markdown("---")
-
-if st.sidebar.button("Go to Upload / Data Page"):
-    st.switch_page("pages/upload_data.py")
 raw_df = load_uploaded(uploaded_file)
 
 if raw_df is None:
@@ -661,6 +657,7 @@ else:
 # End
 
 # ---------------------------
+
 
 
 
