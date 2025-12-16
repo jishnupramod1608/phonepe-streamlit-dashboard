@@ -253,6 +253,10 @@ st.sidebar.header("Controls")
 uploaded_file = st.sidebar.file_uploader(
     "Upload your transactions (.xlsx or .csv)", type=["xlsx", "csv"]
 )
+st.sidebar.markdown("---")
+
+if st.sidebar.button("Go to Upload / Data Page"):
+    st.switch_page("Upload Data")
 raw_df = load_uploaded(uploaded_file)
 
 if raw_df is None:
@@ -260,10 +264,6 @@ if raw_df is None:
     st.stop()
 
 df = preprocess(raw_df)
-st.markdown("---")
-
-if st.button("Go to Analytics Dashboard"):
-    st.switch_page("pages/upload_data.py")
     
 with st.sidebar.expander("Filters", expanded=True):
     min_date = df["date"].min().date()
@@ -661,6 +661,7 @@ else:
 # End
 
 # ---------------------------
+
 
 
 
