@@ -17,5 +17,7 @@ if uploaded_file:
 
 st.markdown("---")
 
+st.markdown("---")
+
 if st.button("← Back to Analytics Dashboard"):
-    st.switch_page("app1")
+    st.switch_page("app1.py")
