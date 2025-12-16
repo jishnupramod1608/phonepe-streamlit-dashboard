@@ -254,7 +254,11 @@ uploaded_file = st.sidebar.file_uploader(
     "Upload your transactions (.xlsx or .csv)", type=["xlsx", "csv"]
 )
 raw_df = load_uploaded(uploaded_file)
+run_analysis = st.sidebar.button("Run Analysis")
 
+if not run_analysis:
+    st.info("Upload a file and click **Run Analysis** to view insights.")
+    st.stop()
 if raw_df is None:
     st.sidebar.info("No file loaded. Upload a file to continue.")
     st.stop()
@@ -657,6 +661,7 @@ else:
 # End
 
 # ---------------------------
+
 
 
 
