@@ -255,7 +255,7 @@ uploaded_file = st.sidebar.file_uploader(
 )
 st.sidebar.markdown("---")
 if st.sidebar.button("Go to Upload / Data Page"):
-    st.switch_page("pages/upload_data.py")
+    st.switch_page("upload_data")
 raw_df = load_uploaded(uploaded_file)
 
 if raw_df is None:
@@ -660,6 +660,7 @@ else:
 # End
 
 # ---------------------------
+
 
 
 
