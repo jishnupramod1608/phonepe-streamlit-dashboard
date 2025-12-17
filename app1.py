@@ -28,6 +28,14 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+if "processed_df" not in st.session_state:
+    st.warning("⚠️ Please upload data first from the Upload page.")
+    st.stop()
+
+df = st.session_state["processed_df"]
+income = st.session_state.get("income", 0)
+expense = st.session_state.get("expense", 0)
+savings_rate = st.session_state.get("savings_rate", 0)
 
 # ------------------------------
 # GLOBAL COLOUR PALETTE & HELPERS
@@ -665,6 +673,7 @@ else:
 # End
 
 # ---------------------------
+
 
 
 
