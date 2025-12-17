@@ -225,7 +225,7 @@ st.session_state["savings_rate"] = savings_rate
 st.markdown("---")
 
 if st.button("Go to Analytics Dashboard"):
-    st.switch_page("app1.py")
+    st.switch_page("app1")
 
     st.subheader("📊 Financial Summary")
     c1, c2, c3 = st.columns(3)
@@ -272,6 +272,7 @@ if st.button("Go to Analytics Dashboard"):
 
 else:
     st.info("Upload your PhonePe transaction file to continue")
+
 
 
 
