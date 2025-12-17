@@ -575,7 +575,10 @@ else:
     st.write("No data to analyse outliers.")
 
 st.markdown("---")
-st.dataframe(top1_df, use_container_width=True)
+st.dataframe(
+    top1[["date", "party", "category", "type", "amount"]].head(15),
+    use_container_width=True
+)
 
 st.caption(
     "Top 1% transactions highlight unusually large payments and "
@@ -623,7 +626,7 @@ st.markdown("---")
 # ------------------------------
 # Suggested key insights for report
 # ------------------------------
-st.subheader("🧠 Key Insights ")
+st.subheader("🧠 Key Insights (Auto-updating)")
 
 if len(fdf) > 0:
 
@@ -665,7 +668,7 @@ if len(fdf) > 0:
 
 else:
     st.info("No insights available for the selected filters.")
-    
+
 
 
 
