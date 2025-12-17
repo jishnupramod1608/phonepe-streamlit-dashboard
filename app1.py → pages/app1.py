@@ -262,6 +262,7 @@ uploaded_file = st.sidebar.file_uploader(
     "Upload your transactions (.xlsx or .csv)", type=["xlsx", "csv"]
 )
 raw_df = load_uploaded(uploaded_file)
+df = preprocess(raw_df)
 run_analysis = st.sidebar.button(
     "Run Analysis",
     type="primary",
@@ -671,6 +672,7 @@ else:
 # End
 
 # ---------------------------
+
 
 
 
