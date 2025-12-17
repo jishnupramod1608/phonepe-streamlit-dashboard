@@ -31,7 +31,11 @@ st.set_page_config(
 st.sidebar.title("📌 Navigator")
 page = st.sidebar.radio(
     "Go to",
-    ["📂 Category Analysis", "🔮 Expense and Savings Forecast"]
+    [
+        "📂 Category Analysis",
+        "🔮 Expense and Savings Forecast",
+        "📊 Transaction Insights"
+    ]
 )
 # ---- GLOBAL FILE UPLOAD (SHARED) ----
 uploaded_file = st.sidebar.file_uploader(
@@ -123,6 +127,10 @@ if page == "📂 Category Analysis":
     income = df[df["Category"] == "Income"][amount_col].sum()
     expense = df[df["Category"] != "Income"][amount_col].sum()
     savings_rate = ((income - expense) / income * 100) if income > 0 else 0
+    st.session_state["processed_df"] = df
+    st.session_state["income"] = income
+    st.session_state["expense"] = expense
+    st.session_state["savings_rate"] = savings_rate
 
     c1, c2, c3 = st.columns(3)
     c1.metric("Income", f"₹{income:,.0f}")
@@ -232,6 +240,19 @@ elif page == "🔮 Expense and Savings Forecast":
     ax2.plot(future_idx, savings_fc, "--o", label="Forecast")
     ax2.legend()
     st.pyplot(fig2)
+
+elif page == "📊 Transaction Insights":
+
+    st.title("📊 PhonePe Transaction Insights")
+
+    if "processed_df" not in st.session_state:
+        st.warning("Please upload and process data in Category Analysis first.")
+        st.stop()
+
+    df = st.session_state["processed_df"]
+    income = st.session_state.get("income", 0)
+    expense = st.session_state.get("expense", 0)
+    savings_rate = st.session_state.get("savings_rate", 0)
 
 
 
