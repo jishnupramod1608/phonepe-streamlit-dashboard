@@ -274,8 +274,6 @@ if not run_analysis:
 if raw_df is None:
     st.sidebar.info("No file loaded. Upload a file to continue.")
     st.stop()
-
-df = preprocess(raw_df)
     
 with st.sidebar.expander("Filters", expanded=True):
     min_date = df["date"].min().date()
@@ -673,6 +671,7 @@ else:
 # End
 
 # ---------------------------
+
 
 
 
