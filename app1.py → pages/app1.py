@@ -303,10 +303,7 @@ st.markdown(
         Use the filters on the left; hover on charts for details.
       </div>
     </div>
-    <div style="text-align:right; font-size:13px; color:rgba(255,255,255,0.95);">
-      <div><b>Project:</b> Data Analysis</div>
-      <div><b>Owner:</b> Jishnu</div>
-      <div><b>Date:</b> {today_str}</div>
+     <div style="text-align:right; font-size:13px; color:rgba(255,255,255,0.95);">
     </div>
   </div>
 </div>
@@ -636,6 +633,7 @@ insights = [
 
 for line in insights:
     st.markdown(f"- {line}")
+
 
 
 
