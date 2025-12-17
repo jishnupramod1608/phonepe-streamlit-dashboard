@@ -146,7 +146,62 @@ def generate_content_suggestions(df, income, expense, savings_rate):
 
     return suggestions
 
+def preprocess(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
 
+    # date column
+    date_col = None
+    for c in df.columns:
+        if "date" in c.lower():
+            date_col = c
+            break
+    if date_col is None:
+        df["date"] = pd.to_datetime(df.iloc[:, 0], errors="coerce")
+    else:
+        df["date"] = pd.to_datetime(df[date_col], errors="coerce")
+
+    # amount column
+    amt_col = None
+    for name in ["amount", "Amount", "AMOUNT", "txn_amount", "Amount (INR)"]:
+        if name in df.columns:
+            amt_col = name
+            break
+    if amt_col is None:
+        num_cols = df.select_dtypes(include=["number"]).columns
+        amt_col = num_cols[0] if len(num_cols) else None
+    df["amount"] = pd.to_numeric(df[amt_col], errors="coerce") if amt_col else np.nan
+
+    # details
+    details_col = None
+    for name in ["Details", "details", "Transaction Details", "Description", "transaction details"]:
+        if name in df.columns:
+            details_col = name
+            break
+    if details_col:
+        df["details"] = df[details_col].astype(str)
+    else:
+        df["details"] = df.iloc[:, 1].astype(str) if df.shape[1] > 1 else ""
+
+    df["party"] = df["details"].apply(extract_party)
+    df["category"] = df["party"].apply(simple_category)
+
+    # type
+    type_col = None
+    for name in ["Type", "type", "Transaction Type", "Txn Type"]:
+        if name in df.columns:
+            type_col = name
+            break
+    df["type"] = df[type_col].astype(str).str.capitalize() if type_col else "Unknown"
+
+    # time features
+    df["date"] = pd.to_datetime(df["date"])
+    df["day"] = df["date"].dt.date
+    df["weekday"] = df["date"].dt.day_name()
+    df["is_weekend"] = df["date"].dt.weekday >= 5
+    df["month"] = df["date"].dt.to_period("M").astype(str)
+    df["year_month"] = df["date"].dt.to_period("M").dt.to_timestamp()
+
+    return df
 # =========================================================
 # STREAMLIT UI
 # =========================================================
@@ -220,4 +275,5 @@ if st.button("Go to Analytics Dashboard"):
 
 else:
     st.info("Upload your PhonePe transaction file to continue")
+
 
