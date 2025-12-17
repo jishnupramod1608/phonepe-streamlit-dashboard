@@ -163,6 +163,17 @@ if uploaded_file:
 
     df = categorize_transactions(df, details_col)
     income, expense, savings_rate = calculate_financials(df)
+   
+# ================== STEP 2: SEND DATA TO DASHBOARD ==================
+st.session_state["processed_df"] = df
+st.session_state["income"] = income
+st.session_state["expense"] = expense
+st.session_state["savings_rate"] = savings_rate
+
+st.markdown("---")
+
+if st.button("Go to Analytics Dashboard"):
+    st.switch_page("app1.py")
 
     st.subheader("📊 Financial Summary")
     c1, c2, c3 = st.columns(3)
@@ -209,3 +220,4 @@ if uploaded_file:
 
 else:
     st.info("Upload your PhonePe transaction file to continue")
+
