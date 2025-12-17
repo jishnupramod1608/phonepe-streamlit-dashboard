@@ -1,13 +1,5 @@
 # app.py
 """
-Modern PhonePe / UPI Transaction Analysis Dashboard (Streamlit)
-Drop this file into your project folder and run:
-    streamlit run app.py
-"""
-
-import streamlit as st
-# app.py
-"""
 Modern PhonePe / UPI dashboard with colourful charts & informative violin.
 Run with:  streamlit run app.py
 """
@@ -28,14 +20,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-if "processed_df" not in st.session_state:
-    st.warning("⚠️ Please upload data first from the Upload page.")
-    st.stop()
-
-df = st.session_state["processed_df"]
-income = st.session_state.get("income", 0)
-expense = st.session_state.get("expense", 0)
-savings_rate = st.session_state.get("savings_rate", 0)
 
 # ------------------------------
 # GLOBAL COLOUR PALETTE & HELPERS
@@ -262,20 +246,13 @@ uploaded_file = st.sidebar.file_uploader(
     "Upload your transactions (.xlsx or .csv)", type=["xlsx", "csv"]
 )
 raw_df = load_uploaded(uploaded_file)
-df = preprocess(raw_df)
-run_analysis = st.sidebar.button(
-    "Run Analysis",
-    type="primary",
-    use_container_width=True
-)
 
-if not run_analysis:
-    st.info("Upload a file and click **Run Analysis** to view insights.")
-    st.stop()
 if raw_df is None:
     st.sidebar.info("No file loaded. Upload a file to continue.")
     st.stop()
-    
+
+df = preprocess(raw_df)
+
 with st.sidebar.expander("Filters", expanded=True):
     min_date = df["date"].min().date()
     max_date = df["date"].max().date()
@@ -318,13 +295,18 @@ st.markdown(
 <div class="header-banner">
   <div style="display:flex; justify-content:space-between; align-items:center;">
     <div>
-      <h1 style="margin:0;">PhonePe Transaction Insights</h1>
+      <h1 style="margin:0;">📊 PhonePe Transaction Insights</h1>
       <div style="margin-top:4px; font-size:15px; color:rgba(255,255,255,0.95);">
         Interactive dashboard – colourful charts, trends and key statistics.
       </div>
       <div style="margin-top:4px; font-size:13px; color:rgba(255,255,255,0.9);">
         Use the filters on the left; hover on charts for details.
       </div>
+    </div>
+    <div style="text-align:right; font-size:13px; color:rgba(255,255,255,0.95);">
+      <div><b>Project:</b> Data Analysis</div>
+      <div><b>Owner:</b> Jishnu</div>
+      <div><b>Date:</b> {today_str}</div>
     </div>
   </div>
 </div>
@@ -398,10 +380,6 @@ with left:
         )
         fig_month.update_layout(hovermode="x unified", legend_title_text="Category")
         st.plotly_chart(fig_month, use_container_width=True)
-        st.caption(
-    "This chart shows how total transaction value changes over time, "
-    "split by spending categories."
-)
     else:
         st.info("Not enough data to show monthly trend.")
 
@@ -638,40 +616,27 @@ st.markdown("---")
 # ------------------------------
 # Suggested key insights for report
 # ------------------------------
-st.subheader("🧠 Key Insights (Business Summary)")
+st.subheader("Key insights (ready to use in report)")
 
-insights = []
+insights = [
+    f"Total transactions analysed: **{stats_dict['total_tx']:,}**, "
+    f"total value **₹{stats_dict['total_val']:.2f}**.",
+    f"Typical transaction size: median **₹{stats_dict['median']:.2f}**, "
+    f"mean **₹{stats_dict['mean']:.2f}**.",
+    f"Top 1% of transactions account for roughly **{stats_dict['top1_share']:.2%}** "
+    "of total value, showing a heavy-tailed spending pattern.",
+    "Treemap & pie charts indicate which categories dominate overall spending "
+    "(e.g., Groceries / Bills / Person transfers).",
+    "Monthly stacked chart shows how category-wise spending evolves over time, "
+    "with visible peaks and dips.",
+    "Weekday–month heatmap reveals which days of week have higher spending intensity.",
+    "Violin + stats table compare distributions across categories, highlighting which "
+    "categories have higher typical and high-end (P90) transaction values.",
+]
 
-if len(fdf) > 0:
-    insights.append(
-        f"Median transaction value is ₹{fdf['amount'].median():,.0f}, "
-        f"while the mean is ₹{fdf['amount'].mean():,.0f}, indicating "
-        f"{'presence of high-value transactions' if fdf['amount'].mean() > fdf['amount'].median() else 'balanced spending behaviour'}."
-    )
+for line in insights:
+    st.markdown(f"- {line}")
 
-    if 'category' in fdf.columns and fdf['category'].nunique() > 1:
-        top_cat = (
-            fdf.groupby('category')['amount']
-            .sum()
-            .idxmax()
-        )
-        insights.append(
-            f"'{top_cat}' contributes the highest share of total transaction value in the selected filters."
-        )
-
-    insights.append(
-        f"The top 1% of transactions account for {share:.1%} of the total value, "
-        f"showing {'high' if share > 0.25 else 'moderate'} spending concentration."
-    )
-
-    for i in insights:
-        st.write("• " + i)
-else:
-    st.info("No insights available for the selected filters.")
-# ---------------------------
-# End
-
-# ---------------------------
 
 
 
