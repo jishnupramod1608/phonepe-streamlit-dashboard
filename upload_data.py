@@ -182,9 +182,6 @@ def preprocess(df: pd.DataFrame) -> pd.DataFrame:
     else:
         df["details"] = df.iloc[:, 1].astype(str) if df.shape[1] > 1 else ""
 
-    df["party"] = df["details"].apply(extract_party)
-    df["category"] = df["party"].apply(simple_category)
-
     # type
     type_col = None
     for name in ["Type", "type", "Transaction Type", "Txn Type"]:
@@ -275,5 +272,6 @@ if st.button("Go to Analytics Dashboard"):
 
 else:
     st.info("Upload your PhonePe transaction file to continue")
+
 
 
