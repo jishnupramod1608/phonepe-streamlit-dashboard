@@ -399,6 +399,10 @@ with right:
     st.plotly_chart(fig_top, use_container_width=True)
 
 st.markdown("---")
+st.caption(
+    "This chart shows how total transaction value changes over time, "
+    "split by spending categories."
+)
 
 # ------------------------------
 # Category treemap & weekday/month heatmap
@@ -571,6 +575,12 @@ else:
     st.write("No data to analyse outliers.")
 
 st.markdown("---")
+st.dataframe(top1_df, use_container_width=True)
+
+st.caption(
+    "Top 1% transactions highlight unusually large payments and "
+    "their contribution to total spending."
+)
 
 # ------------------------------
 # Hypothesis tests
@@ -613,26 +623,50 @@ st.markdown("---")
 # ------------------------------
 # Suggested key insights for report
 # ------------------------------
-st.subheader("Key insights (ready to use in report)")
+st.subheader("🧠 Key Insights ")
 
-insights = [
-    f"Total transactions analysed: **{stats_dict['total_tx']:,}**, "
-    f"total value **₹{stats_dict['total_val']:.2f}**.",
-    f"Typical transaction size: median **₹{stats_dict['median']:.2f}**, "
-    f"mean **₹{stats_dict['mean']:.2f}**.",
-    f"Top 1% of transactions account for roughly **{stats_dict['top1_share']:.2%}** "
-    "of total value, showing a heavy-tailed spending pattern.",
-    "Treemap & pie charts indicate which categories dominate overall spending "
-    "(e.g., Groceries / Bills / Person transfers).",
-    "Monthly stacked chart shows how category-wise spending evolves over time, "
-    "with visible peaks and dips.",
-    "Weekday–month heatmap reveals which days of week have higher spending intensity.",
-    "Violin + stats table compare distributions across categories, highlighting which "
-    "categories have higher typical and high-end (P90) transaction values.",
-]
+if len(fdf) > 0:
 
-for line in insights:
-    st.markdown(f"- {line}")
+    total_tx = len(fdf)
+    total_val = fdf["amount"].sum()
+    mean_val = fdf["amount"].mean()
+    median_val = fdf["amount"].median()
+
+    q99 = fdf["amount"].quantile(0.99)
+    top1 = fdf[fdf["amount"] >= q99]
+    top1_share = top1["amount"].sum() / total_val if total_val > 0 else 0
+
+    insights = []
+
+    insights.append(
+        f"Total **{total_tx:,} transactions** analysed with a combined value of "
+        f"**₹{total_val:,.2f}**."
+    )
+
+    insights.append(
+        f"Typical transaction size is around **₹{median_val:,.0f}** (median), "
+        f"while the mean is **₹{mean_val:,.0f}**, "
+        f"{'indicating occasional high-value transactions.' if mean_val > median_val else 'suggesting fairly consistent spending.'}"
+    )
+
+    insights.append(
+        f"The **top 1% transactions** contribute **{top1_share:.1%}** of total value, "
+        f"showing {'high' if top1_share > 0.25 else 'moderate'} spending concentration."
+    )
+
+    if "category" in fdf.columns and fdf["category"].nunique() > 1:
+        top_cat = fdf.groupby("category")["amount"].sum().idxmax()
+        insights.append(
+            f"Among selected filters, **{top_cat}** contributes the highest share of spending."
+        )
+
+    for i in insights:
+        st.markdown(f"- {i}")
+
+else:
+    st.info("No insights available for the selected filters.")
+    
+
 
 
 
